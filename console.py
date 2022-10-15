@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -118,13 +118,42 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+        else:
+            result = args.split(' ')
+            cls_arg = result[0]
+            r = result[1:]
+            if cls_arg not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            elif (r == ''):
+                return
+            new_instance = HBNBCommand.classes[cls_arg]()
+            storage.save()
+            print(new_instance.id)
+            # storage.save()
+            key = cls_arg + '.' + new_instance.id
+            new_dict = storage.all()[key]
+
+            def func(arg, new_dict):
+                """ it breaks 'arg' into attr and values
+                and updates the dictionary passed into it
+                """
+                s = arg.find('=')
+                attr = arg[:s]
+                value = arg[s+1:]
+                if (value[0] == '"' and value[-1] == '"'):
+                    value = value[1:-1]
+                elif ('.' in value and value.count('.') == 1):
+                    value = float(value)
+                elif ('.' not in value):
+                    value = int(value)
+                else:
+                    return
+                new_dict.__dict__.update({attr: value})
+            for i in r:
+                func(i, new_dict)
+            new_dict.save()
+            storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -319,6 +348,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
