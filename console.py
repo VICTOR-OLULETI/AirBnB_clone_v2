@@ -125,8 +125,6 @@ class HBNBCommand(cmd.Cmd):
             if cls_arg not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            elif (r == ''):
-                return
             new_instance = HBNBCommand.classes[cls_arg]()
             storage.save()
             print(new_instance.id)
