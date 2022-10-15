@@ -128,7 +128,9 @@ class HBNBCommand(cmd.Cmd):
             new_instance = HBNBCommand.classes[cls_arg]()
             storage.save()
             print(new_instance.id)
-            # storage.save()
+            storage.save()
+            if r == '':
+                return
             key = cls_arg + '.' + new_instance.id
             new_dict = storage.all()[key]
 
