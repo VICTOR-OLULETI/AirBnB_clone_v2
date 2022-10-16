@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if (pline[0] == '{' and pline[-1] == '}'\
+                    if (pline[0] == '{' and pline[-1] == '}'
                             and type(eval(pline)) is dict):
                         _args = pline
                     else:
@@ -121,41 +121,23 @@ class HBNBCommand(cmd.Cmd):
         else:
             result = args.split(' ')
             cls_arg = result[0]
-            r = result[1:]
             if cls_arg not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            new_instance = HBNBCommand.classes[cls_arg]()
-            storage.save()
-            print(new_instance.id)
-            # storage.save()
-            key = cls_arg + '.' + new_instance.id
-            new_dict = storage.all()[key]
-
-            def func(arg, new_dict):
-                """ it breaks 'arg' into attr and values
-                and updates the dictionary passed into it
-                """
-                s = arg.find('=')
-                attr = arg[:s]
-                value = arg[s+1:]
+            obj = eval(cls_arg)()
+            # key = cls_arg + '.' + new_instance.id
+            for i in range(1, len(result)):
+                key, value = tuple(result[i].split("="))
                 if (value[0] == '"' and value[-1] == '"'):
-                    value = value[1:-1]
-                elif ('.' in value and value.count('.') == 1):
-                    value = float(value)
-                elif ('.' not in value):
-                    value = int(value)
+                    value = value.strip('"').replace('_', ' ')
                 else:
-                    return
-                new_dict.__dict__.update({attr: value})
-            if r == '':
-                storage.save()
-                return
-            for i in r:
-                func(i, new_dict)
-            new_dict.save()
-            storage.save()
-            return
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+                obj.__dict__[key] = value
+            print(obj.id)
+            obj.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -231,19 +213,25 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
-
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 if k.split('.')[0] == args:
+                    try:
+                        del v.__dict__['_sa_instance_state']
+                    except KeyError:
+                        pass
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
+                try:
+                    del v.__dict__['_sa_instance_state']
+                except KeyError:
+                    pass
                 print_list.append(str(v))
-
         print(print_list)
 
     def help_all(self):
