@@ -43,7 +43,7 @@ class Place(BaseModel, Base):
         def amenities(self):
             """getter attribute amenities that returns the list of Amenity
                 instances based on the attribute amenity_ids that containes
-                all Amenity.id linked to the Place
+                all Amenity.id linked to the Place.
             """
             from models import storage
             list_amenities = []
