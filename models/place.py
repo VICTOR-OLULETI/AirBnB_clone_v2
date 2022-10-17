@@ -2,8 +2,12 @@
 """ Place Module for HBNB project """
 import os
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Integer, Float
+from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from sqlalchemy.orm import relationship
+
+place_amenity = Table('place_amenity', Base.metadata,
+                    Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False),
+                    Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -20,6 +24,7 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship('Review', backref='place', cascade="delete")
+    amenities = relationship('Amenity', secondary=place_amenity, backref='place_amenity', viewonly=False)
     # amenity_ids = []
 
     if os.getenv("HBNB_TYPE_STORAGE") != "db":
@@ -34,3 +39,22 @@ class Place(BaseModel, Base):
                 if (self.id == temp.place_id):
                     list_review.append(temp)
             return temp
+
+        def amenities(self):
+            """getter attribute amenities that returns the list of Amenity
+                instances based on the attribute amenity_ids that containes
+                all Amenity.id linked to the Place
+            """
+            from models import storage
+            list_amenities = []
+            for temp in storage.all(Amenity).values():
+                if (temp.amenity_ids):
+                    list_amenities.append(temp)
+            return temp
+        
+        @amenities.setter
+        def amenities(self, args):
+            from models import storage
+            for temp in storage.all(Amenity).values():
+                if (temp.id == args):
+                    temp.amenity_ids.append(args)
