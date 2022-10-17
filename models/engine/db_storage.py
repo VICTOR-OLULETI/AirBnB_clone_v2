@@ -44,6 +44,7 @@ class DBStorage:
         if (cls is None):
             obj = self.__session.query(State).all()
             obj.extend(self.__session.query(City).all())
+            obj.extend(self.__session.query(User).all())
         else:
             obj = self.__session.query(cls).all()
             
