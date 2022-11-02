@@ -3,17 +3,24 @@
 this would generate a .tgz file
 """
 from datetime import datetime
-from fabric.operations import run, get
-name = 'web_static' + datetime.now().hour()
-+ datetime.now().minute +
-datetime.now().second() + '.tgz'
+from fabric.api import run, get, local
 
 
 def do_pack():
     """
     This function would store all files in web_static in an archive
     """
-    archive_path = "/versions/" + name
-    run("mkdir -p /versions/")
-    get(remote_path="/web/static/*", local_path="/versions/" + name)
+    dt = datetime.utcnow()
+    archive_path = '/versions/web_static_{}{}{}{}{}{}.tgz'.format(
+            dt.year,
+            dt.month,
+            dt.day,
+            dt.day,
+            dt.hour,
+            dt.minute,
+            dt.second)
+    local("mkdir -p /versions/")
+    pack = get(remote_path="/web/static/*", local_path=archive_path)
+    if (pack.failed):
+        return None
     return archive_path
