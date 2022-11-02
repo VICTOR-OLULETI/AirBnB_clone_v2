@@ -8,13 +8,16 @@ sudo mkdir -p '/data/web_static/shared/'
 sudo mkdir -p '/data/web_static/releases/test/'
 sudo touch '/data/web_static/releases/test/index.html'
 echo -e "<h1>Hello MyWorld!<\h1>" > '/data/web_static/releases/test/index.html'
+'''
 file=/data/web_static/current
 if [ -L "$file" ]; then
   rm "$file"
   sudo ln -s /data/web_static/releases/test/ "$file"
 fi
-sudo chown -R ubuntu:ubuntu /data/
-#sudo chgrp -R ubuntu /data/
+'''
+ln -sf /data/web_static/releases/test/ /data/web_static/current
+sudo chown -R ubuntu /data/
+sudo chgrp -R ubuntu /data/
 printf %s "server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
