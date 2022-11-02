@@ -15,7 +15,6 @@ def do_pack():
             dt.year,
             dt.month,
             dt.day,
-            dt.day,
             dt.hour,
             dt.minute,
             dt.second)
