@@ -13,7 +13,7 @@ if [ -L "$file" ]; then
   rm "$file"
   sudo ln -s /data/web_static/releases/test/ "$file"
 fi
-sudo chown -hR ubuntu:ubuntu /data
+sudo chown -hR ubuntu:ubuntu /data/
 
 printf %s "server {
 	listen 80 default_server;
