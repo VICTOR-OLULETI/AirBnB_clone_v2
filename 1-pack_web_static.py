@@ -11,7 +11,7 @@ def do_pack():
     This function would store all files in web_static in an archive
     """
     dt = datetime.utcnow()
-    archive_path = '/versions/web_static_{}{}{}{}{}{}.tgz'.format(
+    archive_file = 'versions/web_static_{}{}{}{}{}{}.tgz'.format(
             dt.year,
             dt.month,
             dt.day,
@@ -20,7 +20,7 @@ def do_pack():
             dt.minute,
             dt.second)
     local("mkdir -p /versions/")
-    pack = local("tar -cvzf {} web_static".format(archive_path))
+    pack = local("tar -cvzf {} web_static".format(archive_file))
     if (pack.failed):
         return None
-    return archive_path
+    return archive_file
