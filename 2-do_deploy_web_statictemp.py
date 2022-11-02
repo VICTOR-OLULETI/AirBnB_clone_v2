@@ -11,7 +11,7 @@ def do_deploy(archive_path):
     This deploys the archive file in the web server
     """
     env.user = 'ubuntu'
-    env.hosts = ['44.210.78.253', '54.160.124.52']
+    env.hosts = ['44.210.78.253', '54.160.124.52', 'localhost']
     if os.path.exists(archive_path) is False:
         return (False)
     try:
