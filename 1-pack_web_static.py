@@ -20,7 +20,7 @@ def do_pack():
             dt.minute,
             dt.second)
     local("mkdir -p /versions/")
-    pack = local("tar -cvzf {} web_static".format(archive_path)
+    pack = local("tar -cvzf {} web_static".format(archive_path))
     if (pack.failed):
         return None
     return archive_path
