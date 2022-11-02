@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-# this would generate a .tgz file
+"""
+this would generate a .tgz file
+"""
 from datetime import datetime
 from fabric.operations import run, get
 name = 'web_static' + datetime.now().hour()
