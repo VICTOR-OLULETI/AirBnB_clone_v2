@@ -8,6 +8,7 @@ import shlex
 import os
 from datetime import datetime
 
+
 def do_pack():
     """
     This function would store all files in web_static in an archive
@@ -27,6 +28,7 @@ def do_pack():
     if local("tar -cvzf {} web_static".format(archive_file)).failed is True:
         return None
     return archive_file
+
 
 def do_deploy(archive_path):
     """ Deploys """
@@ -59,7 +61,9 @@ def do_deploy(archive_path):
     except ValueError:
         return False
 
+
 def deploy():
+    """add all files in static to archive and deploys it on remote servers"""
     archive_path = do_pack()
     if not archive_path:
         return False
