@@ -6,6 +6,28 @@ import os.path
 from fabric.api import *
 import shlex
 import os
+from datetime import datetime
+
+
+def do_pack():
+    """
+    This function would store all files in web_static in an archive
+    """
+    dt = datetime.utcnow()
+    archive_file = "versions/web_static_{}{}{}{}{}{}.tgz".format(
+            dt.year,
+            dt.month,
+            dt.day,
+            dt.hour,
+            dt.minute,
+            dt.second)
+
+    if os.path.isdir("versions") is False:
+        if local("mkdir -p versions").failed is True:
+            return None
+    if local("tar -cvzf {} web_static".format(archive_file)).failed is True:
+        return None
+    return archive_file
 
 
 def do_deploy(archive_path):
@@ -38,3 +60,10 @@ def do_deploy(archive_path):
         return True
     except ValueError:
         return False
+
+
+def deploy():
+    archive_path = do_pack()
+    if not archive_path:
+        return False
+    return (do_deploy(archive_path))
