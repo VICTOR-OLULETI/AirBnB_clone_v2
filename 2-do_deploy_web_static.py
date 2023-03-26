@@ -7,8 +7,10 @@ from fabric.api import *
 import shlex
 import os
 
+
 env.user = 'ubuntu'
 env.hosts = ['54.197.82.68', '54.237.1.122']
+
 def do_deploy(archive_path):
     """ Deploys """
     #env.user = 'ubuntu'
