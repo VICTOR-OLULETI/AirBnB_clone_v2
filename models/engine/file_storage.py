@@ -25,7 +25,10 @@ class FileStorage:
         new_obj = cls()
         cls_name = type(new_obj).__name__
         key = cls_name + '.' + new_obj.id
-        del FileStorage.__objects[key]
+        try:
+            del FileStorage.__objects[key]
+        except KeyError:
+            pass
         for k, v in FileStorage.__objects.items():
             if (k.split('.')[0] == cls_name):
                 temp.update({k: v})
