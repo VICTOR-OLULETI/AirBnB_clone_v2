@@ -4,8 +4,8 @@ this would generate a .tgz file
 """
 import os.path
 from datetime import datetime
+#from fabric import *
 from fabric.api import run, get, local
-
 
 def do_pack():
     """
