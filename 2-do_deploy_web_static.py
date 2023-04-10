@@ -11,10 +11,11 @@ import os
 env.user = 'ubuntu'
 env.hosts = ['35.153.232.12', '18.234.253.65']
 
+
 def do_deploy(archive_path):
     """ Deploys """
-    #env.user = 'ubuntu'
-    #env.hosts = ['35.153.232.12', '18.234.253.65']
+    # env.user = 'ubuntu'
+    # env.hosts = ['35.153.232.12', '18.234.253.65']
     if not os.path.exists(archive_path):
         return False
     try:
