@@ -17,10 +17,11 @@ class State(BaseModel, Base):
         @property
         def cities(self):
             """getter attribute cities for the file storage"""
-            #or state_id = self.id
+            # or state_id = self.id
             from models import storage
+            from models import City
             list_city = []
             for temp in list(storage.all(City).values()):
-                if (self.id == temp.state_id ):
+                if (self.id == temp.state_id):
                     list_city.append(temp)
             return list_city
