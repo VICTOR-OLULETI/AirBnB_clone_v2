@@ -5,7 +5,7 @@
 	</HEAD>
 	<BODY>
 		<UL>
-			{% for item in all_states %}
+			{% for item in all_states|dictsort(false, 'name') %}
 			<LI>State: {{ item.id }}: <B> {{ item.name }}</B>
 			</LI>
 			{% endfor %}
