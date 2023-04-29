@@ -21,23 +21,42 @@ place_amenity = Table(
 
 
 class Place(BaseModel, Base):
-    """ A place to stay """
+    """ A place to stay in the MySQL database.
+        city_id (string)
+        user_id (string)
+        name (string)
+        description (string)
+        number_rooms (Integer)
+        number_bathrooms(Integer)
+        max_guest (Integer)
+        price_by_night (Integer)
+        latitude (Float)
+        longitude (Float)
+        reviews (relationship): The Place-Review relationship
+        amenities (relationship): The Place-Amenity relationship.
+        amenity_ids (list)
+
+    """
     __tablename__ = 'places'
-    city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
-    user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
+    # id = Column(String(60), primary_key=True, nullable=False)
+    city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
+    user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
     name = Column(String(128), nullable=False)
     description = Column(String(1024))
-    number_rooms = Column(Integer, nullable=False, default=0)
-    number_bathrooms = Column(Integer, nullable=False, default=0)
-    max_guest = Column(Integer, nullable=False, default=0)
-    price_by_night = Column(Integer, nullable=False, default=0)
+    number_rooms = Column(Integer, default=0)
+    number_bathrooms = Column(Integer, default=0)
+    max_guest = Column(Integer, default=0)
+    price_by_night = Column(Integer, default=0)
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship('Review', backref='place', cascade="delete")
+    # amenities = relationship(
+            # 'Amenity', secondary="place_amenity",
+            # backref='place_amenity', viewonly=False
+            # )
     amenities = relationship(
-            'Amenity', secondary=place_amenity,
-            backref='place_amenity', viewonly=False
-            )
+            'Amenity', secondary="place_amenity",
+            viewonly=False)
     # amenity_ids = []
 
     if os.getenv("HBNB_TYPE_STORAGE") != "db":
@@ -72,3 +91,6 @@ class Place(BaseModel, Base):
             for temp in storage.all(Amenity).values():
                 if (temp.id == args):
                     temp.amenity_ids.append(args)
+        # def amenities(self, args):
+        #    if type(args) == Amenity:
+        #        self.amenity_ids.append(args.id)
